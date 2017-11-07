@@ -19,6 +19,11 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static net.pupunha.liberty.connector.Application.*;
+import static net.pupunha.liberty.connector.Application.Operation.*;
 
 public class Main {
 
@@ -53,9 +58,32 @@ public class Main {
                     .read("Which do you want connect?");
             if (Option.APPLICATION_MBEAN.equals(option)) {
                 printApplicationMBean(terminal, configuration, libertyAccess);
+            } else if (Option.START_APPLICATION.equals(option)) {
+                invokeOperationApplication(textIO, configuration, libertyAccess, START);
+            } else if (Option.STOP_APPLICATION.equals(option)) {
+                invokeOperationApplication(textIO, configuration, libertyAccess, STOP);
+            } else if (Option.RESTART_APPLICATION.equals(option)) {
+                invokeOperationApplication(textIO, configuration, libertyAccess, RESTART);
             }
         } catch (LibertyAccessException e) {
             log.error(e.getMessage(), e);
+        }
+    }
+
+    private static void invokeOperationApplication(TextIO textIO, LibertyConfiguration configuration, LibertyAccess libertyAccess, Operation operation) throws LibertyAccessException {
+        List<Application> applications = libertyAccess.getApplications(configuration);
+        List<String> collect = applications.stream()
+                .map(Application::getName)
+                .collect(Collectors.toList());
+        String applicationSelected = textIO.newStringInputReader()
+                .withNumberedPossibleValues(collect)
+                .read("Application to "+operation+":");
+
+        Application application = applications.stream()
+                .filter(a -> a.getName().equals(applicationSelected))
+                .findFirst().orElse(null);
+        if (application != null) {
+            libertyAccess.invokeOperationApplication(configuration, application, operation);
         }
     }
 

@@ -9,6 +9,22 @@ public class Application {
     private String state;
     private ObjectName objectName;
 
+    public enum Operation {
+        START("start"),
+        STOP("stop"),
+        RESTART("restart");
+
+        private String name;
+
+        Operation(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
     public Application(String pid, String name, String state, ObjectName objectName) {
         this.pid = pid;
         this.name = name;

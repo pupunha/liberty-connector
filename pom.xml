@@ -8,6 +8,18 @@
   <name>liberty-connector</name>
   <url>https://github.com/pupunha/liberty-connector</url>
 
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://svn.apache.org/viewvc/maven</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>commons-cli</groupId>

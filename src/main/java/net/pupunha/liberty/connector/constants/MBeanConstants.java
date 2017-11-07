@@ -4,6 +4,7 @@ public final class MBeanConstants {
 
     /** ApplicationMBean name */
     public final static String MBEAN_APPLICATIONS = "WebSphere:service=com.ibm.websphere.application.ApplicationMBean,name=*";
+    public final static String MBEAN_APPLICATION = "WebSphere:service=com.ibm.websphere.application.ApplicationMBean";
 
     /** ApplicationMBean name attributes */
     public static final String PID = "Pid";
