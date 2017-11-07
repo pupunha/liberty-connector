@@ -166,18 +166,4 @@ public class JMXLibertyConnector {
         }
     }
 
-    protected class ApplicationStateNotificationListener implements NotificationListener {
-
-        public ApplicationStateNotificationListener() {
-        }
-
-        public void handleNotification(Notification notification, Object obj) {
-            if(notification instanceof AttributeChangeNotification) {
-                AttributeChangeNotification attributeChange =
-                        (AttributeChangeNotification) notification;
-                log.info(attributeChange.getAttributeName() + " - " + attributeChange.getNewValue());
-            }
-        }
-    }
-
 }

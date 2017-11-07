@@ -8,9 +8,6 @@ import net.pupunha.liberty.connector.exception.LibertyAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.AttributeChangeNotification;
-import javax.management.Notification;
-import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import java.io.File;
 import java.util.*;
@@ -49,8 +46,6 @@ public class LibertyAccess {
         Arrays.stream(listServers).forEach(file -> map.put(file.getName(), file));
         return map;
     }
-
-
 
     public void invokeOperationApplication(LibertyConfiguration configuration, Application application, Operation operation) throws LibertyAccessException {
         try {
