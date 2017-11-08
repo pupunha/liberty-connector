@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static net.pupunha.liberty.connector.Application.*;
@@ -57,6 +58,13 @@ public class Main {
                 .desc("List all applications with status")
                 .build();
 
+        Option json = Option.builder("j")
+                .longOpt("json")
+                .hasArg()
+                .argName("profile")
+                .desc("List all applications with status in JSON format")
+                .build();
+
         Option help = Option.builder("h")
                 .longOpt("help")
                 .desc("List available commands")
@@ -64,6 +72,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption(list);
+        options.addOption(json);
         options.addOption(help);
 
         CommandLineParser parser = new DefaultParser();
@@ -73,10 +82,19 @@ public class Main {
                 Map<String, File> serversProfile = libertyAccess.getServersProfile(configuration);
                 String profile = line.getOptionValue("l");
                 if (serversProfile.get(profile) == null) {
-                    System.err.println("Profile not found");
+                    log.error("Profile '{}' not found", profile);
                 } else {
                     configuration.setProfileUse(profile);
                     printApplicationMBean(terminal, configuration, libertyAccess);
+                }
+            } else if (line.hasOption( "j" )) {
+                Map<String, File> serversProfile = libertyAccess.getServersProfile(configuration);
+                String profile = line.getOptionValue("j");
+                if (serversProfile.get(profile) == null) {
+                    log.error("Profile '{}' not found", profile);
+                } else {
+                    configuration.setProfileUse(profile);
+                    printApplicationMBeanJSON(terminal, configuration, libertyAccess);
                 }
             } else if (line.hasOption( "h" )) {
                 HelpFormatter formatter = new HelpFormatter();
@@ -104,9 +122,9 @@ public class Main {
             }
         }
         catch( ParseException exp ) {
-            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+            log.error( "Parsing failed.  Reason: " + exp.getMessage() );
         } catch (LibertyAccessException e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getMessage());
         }
 
     }
@@ -140,6 +158,21 @@ public class Main {
         applications.forEach(application -> at.addRow(application.getPid(), application.getName(), application.getState()));
         at.addRule();
         terminal.println(at.render());
+    }
+
+    private static void printApplicationMBeanJSON(TextTerminal terminal, LibertyConfiguration configuration, LibertyAccess libertyAccess) throws LibertyAccessException {
+        StringBuilder json = new StringBuilder();
+        List<Application> applications = libertyAccess.getApplications(configuration);
+        if (!applications.isEmpty()) {
+            json.append("[ ");
+            StringJoiner joiner = new StringJoiner(",");
+            applications.forEach(application -> joiner.add(application.toString()));
+            json.append(joiner.toString());
+            json.append(" ]");
+        } else {
+            json.append("[ ]");
+        }
+        terminal.println(json.toString());
     }
 
 }

@@ -143,7 +143,7 @@ public class JMXLibertyConnector {
             filter.enableAttribute(STATE);
 
             MBeanServerConnection mbean = jmxConnector.getMBeanServerConnection();
-            mbean.addNotificationListener(application.getObjectName(), listener, filter, null);
+            mbean.addNotificationListener(application.getObjectName(), listener, filter, application);
         } catch (IOException e) {
             throw new JMXLibertyException(CONNECTION_NOT_ESTABLISHED, e);
         } catch (Exception e) {

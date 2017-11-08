@@ -66,11 +66,10 @@ public class Application {
 
     @Override
     public String toString() {
-        return "Application {" +
+        return '{' +
                 "pid='" + pid + '\'' +
                 ", name='" + name + '\'' +
                 ", state='" + state + '\'' +
-                ", objectName=" + objectName +
                 '}';
     }
 }

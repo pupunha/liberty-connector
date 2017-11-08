@@ -26,7 +26,10 @@ public class ApplicationStateNotificationLogListener implements NotificationList
                 }
                 AttributeChangeNotification attributeChange =
                         (AttributeChangeNotification) notification;
-                log.info(attributeChange.getAttributeName() + " - " + attributeChange.getNewValue());
+
+                Application application = (Application) obj;
+
+                log.info("{} - {} - {} - {}", application.getPid(), application.getName(), attributeChange.getAttributeName(), attributeChange.getNewValue());
             } catch (JMXLibertyException e) {
                 log.error(e.getMessage(), e);
             }
